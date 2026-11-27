@@ -294,7 +294,7 @@
     $('#schFoot').textContent = S.footnote;
     const list = S.schools.filter(s => !schQ || s.name.includes(schQ));
     $('#schBody').innerHTML = list.map(s => `<tr>
-      <td class="sch">${esc(s.name)}<span class="pill ${s.group === 'B' ? 'na' : 'ga'}">${GL[s.group]}</span></td>
+      <td class="sch">${esc(s.name)}<span class="pill ${s.group === 'B' ? 'na' : s.group === 'AB' ? 'ab' : 'ga'}">${s.group === 'AB' ? '<b>가</b>·<i>나</i>군' : GL[s.group]}</span></td>
       <td>${esc(s.doc)}</td>
       <td>${s.interview.map(i => `${i.g === 'A' ? '가' : '나'} ${esc(i.d)}`).join('<br>')}</td>
       <td>${esc(s.final)}</td><td>${esc(s.add1)}</td><td class="note">${esc(s.add2)}</td></tr>`).join('')
