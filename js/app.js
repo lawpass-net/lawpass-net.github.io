@@ -301,7 +301,7 @@
   const TYPES = ['doc', 'intA', 'intB', 'final', 'add1', 'add2'];
   const TL = { doc: '1차', intA: '가군', intB: '나군', final: '최종', add1: '추가1', add2: '추가2+' };
   const TF = { doc: '1차(서류) 발표', intA: '가군 면접', intB: '나군 면접', final: '최종 발표', add1: '1차 추가합격', add2: '2차+ 추가/마감' };
-  const SHORT = { '서울시립대': '시립', '한국외대': '외대', '이화여대': '이화', '성균관대': '성균관' };
+  const SHORT = { '서울시립대': '시립', '이화여대': '이화', '성균관대': '성균관' };
   const short = n => SHORT[n] || n.replace(/대$/, '');
   let schView = 'cal', schQ = '';
 
