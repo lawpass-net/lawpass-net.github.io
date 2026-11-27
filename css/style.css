@@ -164,14 +164,14 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .toprow:not(:has(> :not([hidden]))){display:none}
 .toprow .notice-box{flex:1;min-width:0;padding:10px 16px 4px}
 #noticeFull{display:none}  /* 맨 위 줄 공지가 모든 탭에 보이므로 바로가기 탭 공지는 숨긴다 */
-.cd{flex:none;display:flex;flex-direction:column;justify-content:center;gap:8px;padding:12px 16px;border-radius:14px;color:#f3efe4;background:#1d1b18 repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 14px,transparent 14px 28px)}
+.cd{flex:0 0 380px;display:flex;flex-direction:column;justify-content:center;gap:9px;padding:14px 20px;border-radius:14px;color:var(--ink);background:color-mix(in srgb,var(--accent) 8%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 30%,var(--surface))}
 .cd[hidden]{display:none}
 .cd-txt{display:flex;align-items:baseline;justify-content:space-between;gap:10px}
-.cd-txt b{font-size:17px;font-weight:900;color:#e9e4d8;letter-spacing:-.01em}
-.cd-txt small{font-size:12.5px;color:#a8a191}
-.cd-units{display:flex;gap:7px}
-.cd-u{width:64px;padding:7px 0 6px;border-radius:11px;background:#ffd43b;color:#141414;display:flex;flex-direction:column;align-items:center;line-height:1}
-.cd-u b{font-size:30px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
-.cd-u span{font-size:12.5px;font-weight:800;margin-top:4px}
-.cd-after{font-size:18px;font-weight:900;color:#ffd43b;text-align:center;max-width:230px}
-@media (max-width:720px){.toprow{flex-direction:column;gap:10px}.cd-units{width:100%}.cd-u{flex:1;width:auto}.cd-after{max-width:none}}
+.cd-txt b{font-size:17px;font-weight:900;color:var(--ink);letter-spacing:-.01em}
+.cd-txt small{font-size:12.5px;color:var(--ink-dim)}
+.cd-units{display:flex;gap:9px}
+.cd-u{flex:1;padding:9px 0 7px;border-radius:11px;background:var(--surface);color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 25%,var(--surface));display:flex;flex-direction:column;align-items:center;line-height:1}
+.cd-u b{font-size:34px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cd-u span{font-size:12.5px;font-weight:700;color:var(--ink-dim);margin-top:4px}
+.cd-after{font-size:19px;font-weight:900;color:var(--accent);text-align:center}
+@media (max-width:820px){.toprow{flex-direction:column;gap:10px}.cd{flex:none}}

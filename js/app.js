@@ -352,19 +352,40 @@
 
   // ---------------- 카운트다운 ----------------
   (function countdown() {
-    const cd = C.countdown, box = $('#countdown'); if (!cd || !box) return;
-    const at = new Date(cd.at).getTime(), endOfDay = new Date(cd.at.slice(0, 10) + 'T23:59:59+09:00').getTime();
+    const cfg = C.countdown, box = $('#countdown'); if (!cfg || !box) return;
+    const events = (cfg.events || []).map(e => ({ ...e, t: new Date(e.at).getTime(), until: new Date(e.at.slice(0, 10) + 'T23:59:59+09:00').getTime() }));
+    if (cfg.finals && window.SCHEDULE) {
+      // 학교별 최종 발표를 날짜로 묶고, 그날 가장 이른 발표 시각까지 센다
+      const byDay = {};
+      SCHEDULE.schools.forEach(s => {
+        const day = s.dates && s.dates.final; if (!day) return;
+        const tm = String(s.final).match(/(\d{1,2}):(\d{2})/);
+        const hm = tm ? tm[1].padStart(2, '0') + ':' + tm[2] : '';
+        const g = byDay[day] || (byDay[day] = { day, label: String(s.final).match(/^[\d.]+\([^)]+\)/)?.[0] || day, hm: '', names: [] });
+        if (hm && (!g.hm || hm < g.hm)) g.hm = hm;
+        g.names.push(s.name);
+      });
+      Object.values(byDay).forEach(g => {
+        g.hm = g.hm || '09:00';
+        const who = g.names.length <= 3 ? g.names.join('·') : `${g.names.length}개교`;
+        events.push({ label: `${who} 합격자 발표까지`, note: `${g.label} ${g.hm} 기준`, title: g.names.join(', '), t: new Date(`${g.day}T${g.hm}:00+09:00`).getTime() });
+      });
+    }
+    events.sort((a, b) => a.t - b.t);
+    const nowOverride = new URLSearchParams(location.search).get('cdnow');   // 점검용: ?cdnow=2026-12-10T12:00:00%2B09:00
+    const offset = nowOverride ? new Date(nowOverride).getTime() - Date.now() : 0;
     const p2 = n => String(n).padStart(2, '0');
     const unit = (v, l) => `<div class="cd-u"><b>${p2(v)}</b><span>${l}</span></div>`;
     let t;
     function tick() {
-      const now = Date.now(), left = at - now;
-      if (left <= 0) {
-        if (now > endOfDay || !cd.afterText) { box.hidden = true; clearInterval(t); return; }
-        box.innerHTML = `<div class="cd-after">${esc(cd.afterText)}</div>`; box.hidden = false; return;
-      }
-      const s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
-      box.innerHTML = `<div class="cd-txt"><b>${esc(cd.label)}</b><small>${esc(cd.note || '')}</small></div><div class="cd-units">${unit(d, '일')}${unit(h, '시간')}${unit(m, '분')}</div>`;
+      const now = Date.now() + offset;
+      const after = events.find(e => e.afterText && e.t <= now && now <= e.until);
+      if (after) { box.title = ''; box.innerHTML = `<div class="cd-after">${esc(after.afterText)}</div>`; box.hidden = false; return; }
+      const ev = events.find(e => e.t > now);
+      if (!ev) { box.hidden = true; clearInterval(t); return; }
+      const s = Math.floor((ev.t - now) / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+      box.title = ev.title || '';
+      box.innerHTML = `<div class="cd-txt"><b>${esc(ev.label)}</b><small>${esc(ev.note || '')}</small></div><div class="cd-units">${unit(d, '일')}${unit(h, '시간')}${unit(m, '분')}</div>`;
       box.hidden = false;
     }
     t = setInterval(tick, 1000); tick();
