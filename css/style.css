@@ -19,14 +19,19 @@ a{color:inherit}
 .wrap{max-width:1200px;margin:0 auto;padding:0 16px}
 
 .top{position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 92%,transparent);backdrop-filter:blur(8px);border-bottom:1px solid var(--border)}
-.top-in{display:flex;align-items:center;gap:16px;height:56px}
-.brand{font-weight:800;font-size:20px;text-decoration:none;letter-spacing:-.01em;white-space:nowrap}
-.brand span{font-weight:500;font-size:14px;color:var(--ink-dim);margin-left:8px}
+.top-in{display:flex;align-items:center;gap:16px;height:76px}
+.brand{display:flex;align-items:center;gap:12px;text-decoration:none;white-space:nowrap}
+.brand .logo{width:44px;height:44px;flex:none;filter:drop-shadow(0 3px 8px color-mix(in srgb,var(--accent) 35%,transparent))}
+.brand .bn{font-weight:900;font-size:28px;letter-spacing:-.035em;line-height:1}
+.brand .bn em{font-style:normal;color:var(--accent)}
+.brand .tl{display:flex;flex-direction:column;gap:3px;padding-left:14px;margin-left:2px;border-left:2px solid var(--border);line-height:1.15}
+.brand .tl small{font-size:12.5px;color:var(--ink-dim);font-weight:600}
+.brand .tl b{font-size:15.5px;font-weight:800;color:var(--ink);background:linear-gradient(transparent 58%,color-mix(in srgb,var(--accent) 22%,transparent) 58%);padding:0 2px}
 .nav{display:flex;gap:4px;margin-left:auto}
 .nav a{text-decoration:none;padding:8px 14px;font-size:15.5px;border-radius:999px;font-weight:600;color:var(--ink-dim);white-space:nowrap}
 .nav a.on{background:var(--accent);color:var(--accent-ink)}
-@media(max-width:760px){.top-in{height:auto;min-height:56px;padding-top:6px;padding-bottom:6px}.brand{font-size:18px;line-height:1.2}.brand span{display:block;margin-left:0;font-size:11.5px}}
-@media(max-width:560px){.top-in{flex-wrap:wrap;gap:6px}.brand{width:100%}.brand span{display:inline;margin-left:6px;font-size:11.5px}.nav{margin-left:0;width:100%;gap:4px}.nav a{flex:1;text-align:center;padding:7px 6px;font-size:14.5px}}
+@media(max-width:860px){.brand .bn{font-size:25px}.brand .tl small{font-size:11.5px}.brand .tl b{font-size:14px}.nav a{padding:8px 11px}}
+@media(max-width:560px){.top-in{flex-wrap:wrap;gap:8px;height:auto;padding-top:10px;padding-bottom:8px}.brand{width:100%;gap:10px}.brand .logo{width:38px;height:38px}.brand .bn{font-size:24px}.brand .tl{padding-left:10px}.brand .tl small{display:block;font-size:11px}.brand .tl b{font-size:13.5px}.nav{margin-left:0;width:100%;gap:4px}.nav a{flex:1;text-align:center;padding:7px 6px;font-size:14.5px}}
 
 .tab{display:none;padding:24px 0 8px}
 .tab.on{display:block}
