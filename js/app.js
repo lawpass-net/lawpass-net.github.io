@@ -306,7 +306,6 @@
   function renderSchedule() {
     $('#schTitle').textContent = S.title;
     $('#schSub').textContent = '1차(서류) 합격자 발표 · 가/나군 면접 · 최종 합격자 발표 · 추가합격자 발표. ' + S.basis + '.';
-    $('#schFoot').textContent = S.footnote;
     const list = S.schools.filter(s => !schQ || s.name.includes(schQ));
     $('#schBody').innerHTML = list.map(s => `<tr>
       <td class="sch">${esc(s.name)}${s.group !== 'B' ? '<span class="pill ga">가군</span>' : ''}${s.group !== 'A' ? '<span class="pill na">나군</span>' : ''}</td>
