@@ -273,8 +273,9 @@
   function drawCompare() {
     const d = DATA[state.year];
     $('#cCmpTitle').textContent = `${state.year}학년도 학교별 추합 총계`;
-    const gs = showGroups();
-    const cv = (s, g) => s.combined ? (g === gs[0] ? s.total['통합'] : null) : s.total[g];
+    // 가·나 통합 선발한 학교는 별도 막대(회색)로 그린다
+    const gs = showGroups().concat(d.schools.some(s => s.combined) ? ['통합'] : []);
+    const cv = (s, g) => s.combined ? (g === '통합' ? s.total['통합'] : null) : (g === '통합' ? null : s.total[g]);
     const rows = d.schools.map(s => ({ s, v: gs.map(g => { const x = cv(s, g); return x && x.n; }), sum: gs.reduce((a, g) => { const x = cv(s, g); return a + ((x && x.n) || 0); }, 0) }))
       .filter(r => r.v.some(x => x != null)).sort((a, b) => b.sum - a.sum);
     $('#cCmp').parentElement.style.height = Math.max(260, rows.length * 24 + 60) + 'px';
@@ -282,7 +283,7 @@
       type: 'bar',
       data: {
         labels: rows.map(r => r.s.short),
-        datasets: gs.map((g, i) => ({ label: g, backgroundColor: gColor(g), borderRadius: 3, data: rows.map(r => r.v[i]), raws: rows.map(r => { const x = cv(r.s, g); return x ? x.raw + (r.s.combined ? ' (가·나 통합)' : '') : ''; }) }))
+        datasets: gs.map((g, i) => ({ label: g === '통합' ? '가·나 통합' : g, backgroundColor: g === '통합' ? '#8f8a80' : gColor(g), borderRadius: 3, data: rows.map(r => r.v[i]), raws: rows.map(r => { const x = cv(r.s, g); return x ? x.raw : ''; }) }))
       },
       options: baseOpts({
         indexAxis: 'y',
