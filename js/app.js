@@ -363,15 +363,18 @@
       x.el.querySelector('.bn-link').outerHTML = b.url
         ? `<a class="bn-link" href="${esc(b.url)}" target="_blank" rel="noopener">${img}</a>`
         : `<span class="bn-link nolink">${img}</span>`;
+      const other = slots.filter(y => y !== x).map(y => y.i);
+      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => { d.classList.toggle('on', k === x.i); d.disabled = other.includes(k); });
     }
     function move(x, d) {
       const other = slots.filter(y => y !== x).map(y => y.i);
       let i = x.i;
       do { i = (i + d + n) % n; } while (other.includes(i) && n > other.length + 1);
-      x.i = i; render(x);
+      x.i = i; slots.forEach(render);
     }
     slots.forEach(x => {
-      x.el.innerHTML = '<span class="bn-link"></span>' + (n > 2 ? '<button class="bn-nav prev" aria-label="이전 배너">‹</button><button class="bn-nav next" aria-label="다음 배너">›</button>' : '');
+      x.el.innerHTML = '<span class="bn-link"></span>' + (n > 2 ? `<div class="bn-ctl"><button class="bn-nav prev" aria-label="이전 배너">‹</button><div class="bn-dots">${list.map((b, k) => `<button aria-label="${k + 1}번 배너"></button>`).join('')}</div><button class="bn-nav next" aria-label="다음 배너">›</button></div>` : '');
+      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => d.addEventListener('click', () => { x.i = k; slots.forEach(render); }));
       x.el.querySelectorAll('.bn-nav').forEach(btn => btn.addEventListener('click', () => move(x, btn.classList.contains('prev') ? -1 : 1)));
       render(x); x.el.hidden = false;
     });
