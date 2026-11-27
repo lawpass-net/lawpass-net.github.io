@@ -1,6 +1,6 @@
 # Lawpass.net · 박도현 변호사의 로스쿨 입시 종합 정보
 
-https://lawpass-net.github.io (추후 lawpass.net 연결 예정)
+https://lawpass.net (cafe.lawpass.net은 다음 카페로 이동)
 
 ## 구성
 - `index.html` — 탭 3개(추합현황 / 전형일정 / 바로가기)
