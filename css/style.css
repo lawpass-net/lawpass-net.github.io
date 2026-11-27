@@ -159,7 +159,16 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .tr-left{display:flex;flex-direction:column;gap:12px;min-width:0}
 .tr-left > *{margin:0}
 .tr-left:not(:has(> :not([hidden]))){display:none}
-.toprow .notice-box{flex:1;padding:10px 16px 4px}
+.toprow .notice-box{padding:10px 16px 4px}
+.tr-left .cd{flex:1;flex-direction:column;align-items:stretch;justify-content:center;gap:14px;padding:20px 24px}
+.tr-left .cd-txt{flex-direction:row;align-items:baseline;justify-content:space-between;gap:10px}
+.tr-left .cd-txt b{font-size:24px}
+.tr-left .cd-txt small{font-size:14px}
+.tr-left .cd-units{width:100%;gap:12px}
+.tr-left .cd-u{padding:14px 0 11px;border-radius:14px}
+.tr-left .cd-u b{font-size:58px}
+.tr-left .cd-u span{font-size:15px;margin-top:6px}
+.tr-left .cd-after{font-size:26px}
 #noticeFull{display:none}  /* PC에서는 맨 위 공지가 모든 탭에 보이므로 바로가기 탭 공지는 숨긴다 */
 .cd{display:flex;align-items:center;justify-content:space-between;gap:12px 20px;padding:16px 22px;border-radius:14px;color:var(--ink);background:color-mix(in srgb,var(--accent) 16%,var(--surface));border:1px solid color-mix(in srgb,var(--accent) 45%,var(--surface))}
 .cd[hidden]{display:none}
