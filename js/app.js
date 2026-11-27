@@ -48,11 +48,29 @@
     return { text: await r.text(), live: false };
   }
 
+  // 한 군만 모집하는 학교: 시트의 첫 칸 값을 실제 군으로 옮긴다
+  function applyGroups(d) {
+    const over = (C.groupsByYear || {})[d.year] || {};
+    d.schools.forEach(s => {
+      const g = over[s.school] || (C.groups || {})[s.school];
+      s.kind = g || '';
+      if (g !== 'A' && g !== 'B') return;
+      const to = g === 'A' ? '가군' : '나군', from = g === 'A' ? '나군' : '가군';
+      const has = k => (s.total[k] && s.total[k].raw) || Object.values(s.weeks).some(w => w[k] && w[k].raw);
+      if (!has(to) && has(from)) {
+        [s.total[to], s.total[from]] = [s.total[from], s.total[to]];
+        Object.values(s.weeks).forEach(w => { [w[to], w[from]] = [w[from], w[to]]; });
+      }
+      s.groups = has(to) ? [to] : [];
+    });
+    return d;
+  }
+
   async function loadAll() {
     const res = await Promise.all(C.years.map(async y => {
       try {
         const { text, live } = await loadYear(y);
-        DATA[y.year] = P.parseYearSheet(P.parseCSV(text), y.year);
+        DATA[y.year] = applyGroups(P.parseYearSheet(P.parseCSV(text), y.year));
         return live;
       } catch (e) { console.error(y.year, e); return null; }
     }));
