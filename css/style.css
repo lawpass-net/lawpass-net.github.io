@@ -87,8 +87,6 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 #chTable{min-width:1080px}
 .pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:5px}
 .pill.ga{background:color-mix(in srgb,var(--ga) 16%,var(--surface));color:var(--ga)}
-.pill.ab{background:linear-gradient(90deg,color-mix(in srgb,var(--ga) 18%,var(--surface)) 50%,color-mix(in srgb,var(--na) 18%,var(--surface)) 50%);color:var(--ink)}
-.pill.ab b{color:var(--ga);font-weight:700}.pill.ab i{font-style:normal;color:var(--na)}
 .pill.na{background:color-mix(in srgb,var(--na) 16%,var(--surface));color:var(--na)}
 .empty{color:var(--border)}
 
@@ -142,3 +140,5 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .vlegend span{display:flex;align-items:center;gap:6px}
 .vlegend .sw{display:inline-block;width:14px;height:14px;border-radius:3px;flex:none}
 .vlegend .sw.red{background:#d1302a}.vlegend .sw.blk{background:var(--ink)}
+
+#schBody .pill + .pill{margin-left:3px}
