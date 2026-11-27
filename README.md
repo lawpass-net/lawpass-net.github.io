@@ -1,4 +1,4 @@
-# LawPass · 로스쿨 입시 종합 정보
+# Lawpass.net · 박도현 변호사의 로스쿨 입시 종합 정보
 
 https://lawpass-net.github.io (추후 lawpass.net 연결 예정)
 
