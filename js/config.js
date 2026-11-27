@@ -52,6 +52,14 @@ window.SITE_CONFIG = {
     { key: 'supporters', alt: '재학생 서포터스 모집', url: '' }
   ],
 
+  // 방문 통계(js/analytics.js가 읽는다). 값이 비어 있는 도구는 불러오지 않는다. lawpass.net에서만 켜진다.
+  // cloudflareToken: Cloudflare 스크립트 한 줄의 data-cf-beacon 안 "token" 값 / ga4Id: GA4 측정 ID(G-…) / naverId: 네이버 애널리틱스 사이트 ID(wcs_add["wa"] 값)
+  analytics: {
+    cloudflareToken: '',
+    ga4Id: '',
+    naverId: ''
+  },
+
   // 추합현황 페이지 상단의 큰 제보 버튼
   report: {
     sheet: 'https://docs.google.com/spreadsheets/d/11J1_WlzSdtp3BQuFiI9oVglM4RNSxuKrApN3nDaWVXs/edit#gid=803920049',

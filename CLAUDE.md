@@ -99,6 +99,12 @@ CNAME                   lawpass.net
 - **카페 공지 수동 갱신**: 저장소의 작업(Actions) 탭 → "카페 공지 목록 갱신" → 워크플로 실행. 봇이 data/cafe-notice.json을 커밋하므로 **푸시 전에 항상 `git pull --rebase`**.
 - 빨간 막대 색 `#d1302a`, 가군 `--ga`, 나군 `--na`, 통합 회색 `#8f8a80`.
 
+## 7. 방문 통계(2026.11.28)
+- 도구 3개: **Cloudflare Web Analytics**(쿠키 없음, 방문 수의 기준), **GA4**(클릭·탭 이동 등 행동 분석), **네이버 애널리틱스**(네이버 검색 유입). 도구끼리 숫자가 다른 것은 정상이며 Cloudflare를 기준으로 본다. 쿠키 동의 창은 띄우지 않고 맨 아래 고지 한 줄(`#statNotice`, 값이 하나라도 있을 때만 보임)만 둔다.
+- 값은 `js/config.js`의 `analytics: { cloudflareToken, ga4Id, naverId }` 한 곳에만 적는다. `js/analytics.js`가 값이 있는 도구만 비동기로 불러오며, **lawpass.net에서만 켜진다**(로컬 점검은 `?stats=1`, GA4 디버그 뷰는 `?gadebug=1`).
+- GA4 이벤트(`window.track`, app.js에서 호출): `tab_change`(tab), `year_select`(year), `group_select`(group), `view_select`(view), `report_click`(button: sheet/cafe), `banner_click`(position: top/bottom, banner_key, linked), `banner_nav`(position, method: prev/next/dot, banner_key). GA4에서 맞춤 측정기준으로 보려면 관리 → 맞춤 정의에 position·banner_key·button·tab·view 등을 이벤트 범위로 등록한다.
+- 로컬에서 가짜 토큰으로 띄우면 Cloudflare 수집 요청이 CORS 오류를 내는데, 실제 사이트에서는 나지 않는다.
+
 ## 6. 남은 일·아이디어
 - 시트 웹 게시 후 `publishedId` 설정(실시간 반영) — 사용자 작업 필요.
 - 2022 부산대 군 확인.

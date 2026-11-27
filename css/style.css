@@ -200,6 +200,7 @@ a.bn-link:hover img{filter:brightness(1.04)}
 .bn-dots button.on{width:22px;background:var(--accent)}
 .bn-dots button:disabled{opacity:.35;cursor:default}
 .bn-bottom{margin-top:18px;margin-bottom:40px}
+.foot-stat{color:var(--ink-dim);font-size:12.5px;margin-top:-28px;margin-bottom:28px;text-align:center}
 .bn-wide{max-width:1000px;margin:0 auto}
 @media (max-width:820px){
   .toprow{grid-template-columns:1fr}

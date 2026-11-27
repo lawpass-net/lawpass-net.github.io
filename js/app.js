@@ -4,6 +4,7 @@
   const $ = s => document.querySelector(s);
   const esc = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const css = v => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+  const track = (name, params) => { if (window.track) window.track(name, params); };  // GA4 이벤트(js/analytics.js)
 
   // ---------------- 탭 이동 ----------------
   function showTab() {
@@ -15,7 +16,8 @@
     $('#chuhapFoot').hidden = id !== 'chuhap';
     if (id === 'chuhap') drawCharts();
   }
-  window.addEventListener('hashchange', showTab);
+  window.addEventListener('hashchange', () => { showTab(); track('tab_change', { tab: document.body.dataset.tab }); });
+  if (window.ANALYTICS_ON) $('#statNotice').hidden = false;
 
   function segment(el, attr, onPick) {
     el.addEventListener('click', e => {
@@ -122,9 +124,9 @@
     state.school = state.school || list[0];
     $('#schoolSel').innerHTML = list.map(n => `<option ${n === state.school ? 'selected' : ''}>${esc(n)}</option>`).join('');
   }
-  segment($('#yearSeg'), 'y', v => { state.year = +v; render(); });
-  segment($('#groupSeg'), 'g', v => { state.group = v; render(); });
-  segment($('#viewSeg'), 'v', v => { state.view = v; render(); });
+  segment($('#yearSeg'), 'y', v => { state.year = +v; render(); track('year_select', { year: +v }); });
+  segment($('#groupSeg'), 'g', v => { state.group = v; render(); track('group_select', { group: v }); });
+  segment($('#viewSeg'), 'v', v => { state.view = v; render(); track('view_select', { view: v }); });
   $('#q').addEventListener('input', e => { state.q = e.target.value.trim(); render(); });
   $('#schoolSel').addEventListener('change', e => { state.school = e.target.value; render(); });
 
@@ -352,8 +354,8 @@
   (function banners() {
     const list = C.banners || [], n = list.length; if (!n) return;
     const slots = [
-      { el: $('#bannerTop'), kind: 'sq', w: 1080, h: 1080 },
-      { el: $('#bannerBottom'), kind: 'wide', w: 2000, h: 400 }
+      { el: $('#bannerTop'), kind: 'sq', w: 1080, h: 1080, pos: 'top' },
+      { el: $('#bannerBottom'), kind: 'wide', w: 2000, h: 400, pos: 'bottom' }
     ].filter(x => x.el);
     const first = Math.floor(Math.random() * n);
     slots.forEach((x, k) => { x.i = n > 1 ? (first + k * (1 + Math.floor(Math.random() * (n - 1)))) % n : 0; });
@@ -371,10 +373,12 @@
       let i = x.i;
       do { i = (i + d + n) % n; } while (other.includes(i) && n > other.length + 1);
       x.i = i; slots.forEach(render);
+      track('banner_nav', { position: x.pos, method: d < 0 ? 'prev' : 'next', banner_key: list[i].key });
     }
     slots.forEach(x => {
       x.el.innerHTML = '<span class="bn-link"></span>' + (n > 2 ? `<div class="bn-ctl"><button class="bn-nav prev" aria-label="이전 배너">‹</button><div class="bn-dots">${list.map((b, k) => `<button aria-label="${k + 1}번 배너"></button>`).join('')}</div><button class="bn-nav next" aria-label="다음 배너">›</button></div>` : '');
-      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => d.addEventListener('click', () => { x.i = k; slots.forEach(render); }));
+      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => d.addEventListener('click', () => { x.i = k; slots.forEach(render); track('banner_nav', { position: x.pos, method: 'dot', banner_key: list[k].key }); }));
+      x.el.addEventListener('click', e => { if (e.target.closest('.bn-link')) track('banner_click', { position: x.pos, banner_key: list[x.i].key, linked: !!list[x.i].url }); });
       x.el.querySelectorAll('.bn-nav').forEach(btn => btn.addEventListener('click', () => move(x, btn.classList.contains('prev') ? -1 : 1)));
       render(x); x.el.hidden = false;
     });
@@ -422,6 +426,8 @@
   })();
 
   if (C.report) { $('#btnSheet').href = C.report.sheet; $('#btnCafe').href = C.report.cafe; }
+  $('#btnSheet').addEventListener('click', () => track('report_click', { button: 'sheet' }));
+  $('#btnCafe').addEventListener('click', () => track('report_click', { button: 'cafe' }));
 
   // ---------------- 카페 공지 ----------------
   async function loadNotices() {
