@@ -154,7 +154,9 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .pill{white-space:nowrap}
 
 /* 맨 위: [타이머 / 카페 공지 | 정사각 배너], 맨 아래: 가로 배너 */
-.toprow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;margin:16px 0 18px;align-items:stretch}
+.toprow{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:14px;margin:16px 0 18px;align-items:start}
+.toprow:has(.bn-sq:not([hidden])) .tr-left{height:410px}  /* 정사각 배너 이미지 높이에 맞춘다(아래 넘김 줄 제외) */
+.tr-left:has(> .cd[hidden]) .notice-box{flex:1}
 .toprow:not(:has(:not([hidden]):is(.cd,.notice-box,.bn-sq))){display:none}
 .tr-left{display:flex;flex-direction:column;gap:12px;min-width:0}
 .tr-left > *{margin:0}
