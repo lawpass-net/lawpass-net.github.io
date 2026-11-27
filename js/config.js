@@ -55,12 +55,12 @@ window.SITE_CONFIG = {
   // 추합현황 페이지 상단의 큰 제보 버튼
   report: {
     sheet: 'https://docs.google.com/spreadsheets/d/11J1_WlzSdtp3BQuFiI9oVglM4RNSxuKrApN3nDaWVXs/edit#gid=803920049',
-    cafe: 'https://cafe.daum.net/lsinfo/nafx/82'
+    cafe: 'https://cafe.daum.net/lsinfo/nafW/82'
   },
 
   links: [
     { title: '추합 현황 시트', desc: '수험생 제보로 갱신되는 원본 시트. 직접 수정·추가할 수 있다.', url: 'https://docs.google.com/spreadsheets/d/11J1_WlzSdtp3BQuFiI9oVglM4RNSxuKrApN3nDaWVXs', tag: '원본' },
-    { title: '추합 제보 게시글', desc: '틀린 내용이나 새 소식은 이 게시글 댓글로 알려 달라.', url: 'https://cafe.daum.net/lsinfo/nafx/82', tag: '제보' },
+    { title: '추합 제보 게시글', desc: '틀린 내용이나 새 소식은 이 게시글 댓글로 알려 달라.', url: 'https://cafe.daum.net/lsinfo/nafW/82', tag: '제보' },
     { title: '입시결과 제보 게시글', desc: 'LEET·학점·영어 등 입시결과(합불) 제보 게시글.', url: 'https://cafe.daum.net/lsinfo/nafW/79', tag: '제보' },
     { title: '다음 카페 로스쿨 입시정보', desc: '입시 정보·후기·질문 게시판.', url: 'https://cafe.daum.net/lsinfo', tag: '카페' },
     { title: '"박도현 변호사와 함께 로스쿨로 Go!" 오픈카톡방', desc: '로스쿨 입시생·예비합격자를 위한 오픈카톡방.', url: 'https://open.kakao.com/o/g0JMskL', tag: '오픈카톡' },

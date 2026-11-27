@@ -54,7 +54,7 @@
 - `js/schedule-data.js` — 2027학년도 25개교(각 학교 2027 입학요강 원문, 2026.9.13 기준). 원본은 claude.ai 아티팩트 https://claude.ai/artifact/4AvNyB8hsF6HmcUb5sNRWr 였다. 새 학년도에는 이 파일을 교체한다.
 
 ### 다음 카페
-- https://cafe.daum.net/lsinfo (grpid 1YIpC). 공지사항 게시판 fldid `nafW`, 추합 제보 게시글 nafx/82.
+- https://cafe.daum.net/lsinfo (grpid 1YIpC). 공지사항 게시판 fldid `nafW`, 추합 제보 게시글 nafW/82(2026.11.28 변경, 이전 nafx/82).
 - 게시판 목록은 **로그인 없이** `https://cafe.daum.net/_c21_/bbs_list?grpid=1YIpC&fldid=nafW` HTML 안의 `notices.push({...})`(고정 공지), `articles.push({...})`(최근 20건)로 읽힌다. 원문 링크는 `https://cafe.daum.net/lsinfo/nafW/{dataid}`.
 
 ## 3. 파일 구조
