@@ -24,7 +24,13 @@
 </header>
 
 <main class="wrap">
-  <div id="countdown" class="cd" hidden></div>
+  <div class="toprow">
+    <div id="countdown" class="cd" hidden></div>
+    <div class="notice-box" id="noticeTop" hidden>
+      <div class="nb-head"><b>📢 카페 공지</b><a id="noticeMore" target="_blank" rel="noopener">공지사항 전체 보기 ›</a></div>
+      <ul class="nb-list" id="noticeTopList"></ul>
+    </div>
+  </div>
   <div id="banners" class="banners"></div>
 
   <!-- 추합현황 -->
@@ -33,11 +39,6 @@
       <h1>추가합격 현황</h1>
       <p class="sub">수험생 제보로 만들어지는 자료다. 예비번호 기준이며(실제 등록 여부 무관), 괄호 안 <b>특</b>은 특별전형, <b>지</b>는 지역인재다. <b>+</b>는 그 이상, <b>?</b>는 추정이다. <span class="vf">빨간 글자</span>는 박도현 변호사가 각 학교에 정보공개청구하여 확인한 값이다.</p>
       <p class="status" id="dataStatus">데이터를 불러오는 중…</p>
-    </div>
-
-    <div class="notice-box" id="noticeTop" hidden>
-      <div class="nb-head"><b>📢 카페 공지</b><a id="noticeMore" target="_blank" rel="noopener">공지사항 전체 보기 ›</a></div>
-      <ul class="nb-list" id="noticeTopList"></ul>
     </div>
 
     <div class="report">

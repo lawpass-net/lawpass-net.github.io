@@ -11,6 +11,7 @@
     const id = ['chuhap', 'schedule', 'links'].includes(t) ? t : 'chuhap';
     document.querySelectorAll('.tab').forEach(el => el.classList.toggle('on', el.id === 'tab-' + id));
     document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.tab === id));
+    document.body.dataset.tab = id;
     $('#chuhapFoot').hidden = id !== 'chuhap';
     if (id === 'chuhap') drawCharts();
   }
@@ -363,7 +364,7 @@
         box.innerHTML = `<div class="cd-after">${esc(cd.afterText)}</div>`; box.hidden = false; return;
       }
       const s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
-      box.innerHTML = `<div class="cd-txt"><b>${esc(cd.label)}</b><small>${esc(cd.note || '')}</small></div><div class="cd-units">${d ? unit(d, '일') : ''}${unit(h, '시간')}${unit(m, '분')}${unit(s % 60, '초')}</div>`;
+      box.innerHTML = `<div class="cd-txt"><b>${esc(cd.label)}</b><small>${esc(cd.note || '')}</small></div><div class="cd-units">${unit(d, '일')}${unit(h, '시간')}${unit(m, '분')}</div>`;
       box.hidden = false;
     }
     t = setInterval(tick, 1000); tick();
