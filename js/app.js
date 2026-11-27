@@ -364,8 +364,6 @@
     $('#noticeTopList').innerHTML = pinned.map(row).join('');
     $('#noticeFullList').innerHTML = pinned.map(row).join('');
     $('#noticeMore').href = $('#noticeMore2').href = b.url;
-    const u = new Date(d.updated);
-    $('#noticeUpd').textContent = `카페 공지사항 게시판의 [공지] 글을 1시간마다 자동으로 가져온다. 마지막 확인: ${u.getMonth() + 1}월 ${u.getDate()}일 ${String(u.getHours()).padStart(2, '0')}:${String(u.getMinutes()).padStart(2, '0')}`;
     $('#noticeTop').hidden = $('#noticeFull').hidden = false;
   }
 
