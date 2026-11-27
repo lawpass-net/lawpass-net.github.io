@@ -87,6 +87,7 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 #chTable{min-width:1080px}
 .pill{display:inline-block;font-size:12.5px;font-weight:700;padding:1px 7px;border-radius:999px;margin-left:5px}
 .pill.ga{background:color-mix(in srgb,var(--ga) 16%,var(--surface));color:var(--ga)}
+.pill.tg{background:color-mix(in srgb,var(--ink) 10%,var(--surface));color:var(--ink)}
 .pill.na{background:color-mix(in srgb,var(--na) 16%,var(--surface));color:var(--na)}
 .empty{color:var(--border)}
 

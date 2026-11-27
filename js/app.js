@@ -55,9 +55,20 @@
     d.schools.forEach(s => {
       const g = over[s.school] || (C.groups || {})[s.school];
       s.kind = g || '';
+      const has = k => (s.total[k] && s.total[k].raw) || Object.values(s.weeks).some(w => w[k] && w[k].raw);
+      if (g === 'AB') {
+        // 가·나군 분할 모집 학교인데 총계가 한 칸에만 있으면 가·나 통합 선발로 본다
+        const tA = !!(s.total['가군'] && s.total['가군'].raw), tB = !!(s.total['나군'] && s.total['나군'].raw);
+        if (tA !== tB) {
+          const src = tA ? '가군' : '나군', oth = tA ? '나군' : '가군';
+          s.total['통합'] = s.total[src];
+          Object.values(s.weeks).forEach(w => { w['통합'] = (w[src] && w[src].raw) ? w[src] : w[oth]; });
+          s.combined = true; s.groups = ['통합'];
+        }
+        return;
+      }
       if (g !== 'A' && g !== 'B') return;
       const to = g === 'A' ? '가군' : '나군', from = g === 'A' ? '나군' : '가군';
-      const has = k => (s.total[k] && s.total[k].raw) || Object.values(s.weeks).some(w => w[k] && w[k].raw);
       if (!has(to) && has(from)) {
         [s.total[to], s.total[from]] = [s.total[from], s.total[to]];
         Object.values(s.weeks).forEach(w => { [w[to], w[from]] = [w[from], w[to]]; });
@@ -124,7 +135,8 @@
   }
 
   // ---------------- 렌더 ----------------
-  const pill = g => `<span class="pill ${g === '가군' ? 'ga' : 'na'}">${g === '가군' ? '가' : '나'}</span>`;
+  const pill = g => g === '통합' ? '<span class="pill tg" title="가·나군 통합 선발">가·나 통합</span>' : `<span class="pill ${g === '가군' ? 'ga' : 'na'}">${g === '가군' ? '가' : '나'}</span>`;
+  const sGroups = s => s.combined ? ['통합'] : showGroups();
   const cell = v => v && v.raw ? (v.verified ? `<span class="vf" title="정보공개청구로 확인한 값">${esc(v.raw)}</span>` : esc(v.raw)) : '<span class="empty">·</span>';
   const noteHtml = s => s.noteVerified ? `<span class="vf">${esc(s.note)}</span>` : esc(s.note);
 
@@ -141,7 +153,7 @@
     let h = `<thead><tr><th>학교</th><th>총계</th>${d.weeks.map(w => `<th>${w.after ? w.week + '주차 이후' : w.week + '주차'}<small>${esc(w.range)}</small></th>`).join('')}<th>비고</th></tr></thead><tbody>`;
     let rows = 0;
     d.schools.filter(s => !state.q || s.school.includes(state.q) || s.short.includes(state.q)).forEach(s => {
-      let gs = groups.filter(g => s.groups.includes(g));
+      let gs = s.combined ? ['통합'] : groups.filter(g => s.groups.includes(g));
       if (!gs.length) { if (state.group !== 'all') return; gs = []; }
       const span = Math.max(gs.length, 1);
       const first = `<td class="sch" rowspan="${span}"><a data-s="${esc(s.school)}">${esc(s.short)}</a></td>`;
@@ -192,7 +204,7 @@
     }, extra || {});
   }
   const showGroups = () => state.group === 'all' ? ['가군', '나군'] : [state.group];
-  const gColor = g => g === '가군' ? css('--ga') : css('--na');
+  const gColor = g => g === '가군' ? css('--ga') : g === '통합' ? css('--ink-dim') : css('--na');
 
   function drawCharts() {
     if (typeof Chart === 'undefined' || !DATA[state.year]) return;
@@ -205,9 +217,11 @@
     const years = C.years.concat(C.historyYears || []).map(y => y.year).filter(y => DATA[y]).sort();
     const find = y => DATA[y].schools.find(s => s.school === state.school);
     const RED = '#d1302a', BLK = css('--ink');
-    const tv = (y, g) => { const s = find(y); return s && s.total[g]; };
+    // 통합 선발한 해는 첫 번째 막대 자리에 '통합'으로 그린다
+    const tv = (y, g) => { const s = find(y); if (!s) return null; if (s.combined) return g === showGroups()[0] ? s.total['통합'] : null; return s.total[g]; };
+    const comb = y => { const s = find(y); return !!(s && s.combined); };
     const gs = showGroups().filter(g => years.some(y => { const v = tv(y, g); return v && v.n != null; }));
-    const two = gs.length > 1;
+    const two = gs.length > 1 || years.some(comb);
     chart('cYear', {
       type: 'bar',
       data: {
@@ -217,7 +231,7 @@
           data: years.map(y => { const v = tv(y, g); return v && v.n != null ? v.n : null; }),
           raws: years.map(y => { const v = tv(y, g); return v ? v.raw : ''; }),
           vf: years.map(y => { const v = tv(y, g); return !!(v && v.verified); }),
-          backgroundColor: years.map(y => { const v = tv(y, g); const c = v && v.verified ? RED : BLK; return g === '나군' && two ? c + '99' : c; })
+          backgroundColor: years.map(y => { const v = tv(y, g); const c = v && v.verified ? RED : BLK; return g === '나군' && two && !comb(y) ? c + '99' : c; })
         }))
       },
       plugins: [{
@@ -227,14 +241,14 @@
           ch.data.datasets.forEach((ds, di) => ch.getDatasetMeta(di).data.forEach((bar, i) => {
             if (ds.data[i] == null) return;
             ctx.fillStyle = ds.vf[i] ? RED : BLK; ctx.font = "700 12px 'Pretendard Variable',sans-serif";
-            ctx.fillText((two ? (ds.label === '가군' ? '가 ' : '나 ') : '') + ds.data[i] + (/\+/.test(ds.raws[i]) ? '+' : ''), bar.x, bar.y - 3);
+            ctx.fillText((two ? (comb(years[i]) ? '통합 ' : ds.label === '가군' ? '가 ' : '나 ') : '') + ds.data[i] + (/\+/.test(ds.raws[i]) ? '+' : ''), bar.x, bar.y - 3);
           }));
           ctx.restore();
         }
       }],
       options: baseOpts({
         layout: { padding: { top: 18 } },
-        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw} · ${c.dataset.vf[c.dataIndex] ? '정보공개청구 확인' : '수험생 제보(미확인)'}` } } }
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${comb(years[c.dataIndex]) ? '가·나 통합' : c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw} · ${c.dataset.vf[c.dataIndex] ? '정보공개청구 확인' : '수험생 제보(미확인)'}` } } }
       })
     });
 
@@ -245,7 +259,7 @@
       type: 'line',
       data: {
         labels,
-        datasets: (s ? showGroups() : []).map(g => {
+        datasets: (s ? sGroups(s) : []).map(g => {
           let acc = 0, any = false;
           const vals = d.weeks.map(w => { const v = s.weeks[w.key] && s.weeks[w.key][g]; if (v && v.n != null) { acc += v.n; any = true; } return acc; });
           return { label: g, data: any ? vals : [], borderColor: gColor(g), backgroundColor: gColor(g), tension: .25, pointRadius: 3,
@@ -260,14 +274,15 @@
     const d = DATA[state.year];
     $('#cCmpTitle').textContent = `${state.year}학년도 학교별 추합 총계`;
     const gs = showGroups();
-    const rows = d.schools.map(s => ({ s, v: gs.map(g => s.total[g] && s.total[g].n), sum: gs.reduce((a, g) => a + ((s.total[g] && s.total[g].n) || 0), 0) }))
+    const cv = (s, g) => s.combined ? (g === gs[0] ? s.total['통합'] : null) : s.total[g];
+    const rows = d.schools.map(s => ({ s, v: gs.map(g => { const x = cv(s, g); return x && x.n; }), sum: gs.reduce((a, g) => { const x = cv(s, g); return a + ((x && x.n) || 0); }, 0) }))
       .filter(r => r.v.some(x => x != null)).sort((a, b) => b.sum - a.sum);
     $('#cCmp').parentElement.style.height = Math.max(260, rows.length * 24 + 60) + 'px';
     const c = chart('cCmp', {
       type: 'bar',
       data: {
         labels: rows.map(r => r.s.short),
-        datasets: gs.map((g, i) => ({ label: g, backgroundColor: gColor(g), borderRadius: 3, data: rows.map(r => r.v[i]), raws: rows.map(r => r.s.total[g] ? r.s.total[g].raw : '') }))
+        datasets: gs.map((g, i) => ({ label: g, backgroundColor: gColor(g), borderRadius: 3, data: rows.map(r => r.v[i]), raws: rows.map(r => { const x = cv(r.s, g); return x ? x.raw + (r.s.combined ? ' (가·나 통합)' : '') : ''; }) }))
       },
       options: baseOpts({
         indexAxis: 'y',
