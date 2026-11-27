@@ -47,7 +47,7 @@ window.SITE_CONFIG = {
     { key: 'interview',  alt: '면접 문제 제보 — 가·나군 면접 응시생 리워드 증정', url: '' },  // 시안 기간 링크 끔. 확정 후: https://forms.cloud.microsoft/r/9hYfptwVrL
     { key: 'result',     alt: '로스쿨 입시 결과 제보 EVENT', url: '' },  // 시안 기간 링크 끔. 확정 후: https://cafe.daum.net/lsinfo/nafW/79
     { key: 'leet',       alt: '박도현 변호사의 LEET 그룹과외', url: '' },  // 시안 기간 링크 끔. 확정 후: https://cafe.daum.net/lsinfo/nafW/80
-    { key: 'civil',      alt: '박도현 변호사의 민법 사례형 클리닉(온라인)', url: '' },
+    { key: 'civil',      alt: '박도현 변호사의 민법 사례형 클리닉(온라인)', url: '' },  // 시안 기간 링크 끔. 확정 후: https://cafe.daum.net/lsinfo/nafW/81
     { key: 'mentoring',  alt: '로스쿨 생활 멘토링 특강', url: '' },
     { key: 'supporters', alt: '재학생 서포터스 모집', url: '' }
   ],
