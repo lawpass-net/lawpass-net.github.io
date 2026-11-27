@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>LawPass · 로스쿨 입시 종합 정보</title>
+<meta name="description" content="법학전문대학원 추가합격 현황(2020~2026학년도), 2027학년도 전형일정, 입시 커뮤니티 바로가기">
+<meta property="og:title" content="LawPass · 로스쿨 입시 종합 정보">
+<meta property="og:description" content="로스쿨 추가합격 현황 · 전형일정 · 바로가기">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚖️</text></svg>">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+<header class="top">
+  <div class="wrap top-in">
+    <a class="brand" href="#chuhap">LawPass<span>로스쿨 입시 종합 정보</span></a>
+    <nav class="nav" id="nav">
+      <a href="#chuhap" data-tab="chuhap">추합현황</a>
+      <a href="#schedule" data-tab="schedule">전형일정</a>
+      <a href="#links" data-tab="links">바로가기</a>
+    </nav>
+  </div>
+</header>
+
+<main class="wrap">
+
+  <!-- 추합현황 -->
+  <section id="tab-chuhap" class="tab">
+    <div class="head">
+      <h1>추가합격 현황</h1>
+      <p class="sub">수험생 제보로 만들어지는 자료다. 예비번호 기준이며(실제 등록 여부 무관), 괄호 안 <b>특</b>은 특별전형, <b>지</b>는 지역인재다. <b>+</b>는 그 이상, <b>?</b>는 추정이다.</p>
+      <p class="status" id="dataStatus">데이터를 불러오는 중…</p>
+    </div>
+
+    <div class="bar">
+      <div class="seg" id="yearSeg"></div>
+    </div>
+    <div class="bar">
+      <div class="seg" id="groupSeg">
+        <button data-g="all" class="on">전체</button><button data-g="가군">가군</button><button data-g="나군">나군</button>
+      </div>
+      <div class="seg" id="viewSeg">
+        <button data-v="table" class="on">표</button><button data-v="school">학교별 추이</button><button data-v="compare">학교 비교</button>
+      </div>
+      <input id="q" class="search" placeholder="학교 검색">
+    </div>
+
+    <div id="view-table" class="view on">
+      <div class="card scroll"><table class="grid" id="chTable"></table></div>
+      <p class="hint">표는 시트 원문 그대로다. 총계와 주차 합계가 다른 경우는 제보 누락 또는 결원보충 반영 차이다.</p>
+    </div>
+
+    <div id="view-school" class="view">
+      <div class="bar"><select id="schoolSel" class="select"></select></div>
+      <div class="charts">
+        <div class="card pad"><h3>연도별 추합 총계</h3><div class="cv"><canvas id="cYear"></canvas></div><p class="hint">총계 칸 기준(일반전형 숫자). 빈 해는 제보 없음.</p></div>
+        <div class="card pad"><h3 id="cWeekTitle">주차별 누적 추합</h3><div class="cv"><canvas id="cWeek"></canvas></div><p class="hint">주차 칸에 제보된 숫자를 누적했다.</p></div>
+      </div>
+      <div class="card pad"><h3>연도별 원문</h3><div class="scroll"><table class="grid" id="schoolHist"></table></div></div>
+    </div>
+
+    <div id="view-compare" class="view">
+      <div class="card pad"><h3 id="cCmpTitle">학교별 추합 총계</h3><div class="cv tall"><canvas id="cCmp"></canvas></div><p class="hint">선택한 연도·군의 총계 칸 기준. 학교를 누르면 학교별 추이로 이동한다.</p></div>
+    </div>
+  </section>
+
+  <!-- 전형일정 -->
+  <section id="tab-schedule" class="tab">
+    <div class="head">
+      <h1 id="schTitle"></h1>
+      <p class="sub" id="schSub"></p>
+    </div>
+    <div class="bar">
+      <div class="seg" id="schSeg"><button data-v="table" class="on">표</button><button data-v="cal">달력</button></div>
+      <input id="schQ" class="search" placeholder="학교 검색">
+      <div class="legend">
+        <span style="--c:var(--doc)">1차 발표</span><span style="--c:var(--intA)">가군 면접</span><span style="--c:var(--intB)">나군 면접</span>
+        <span style="--c:var(--final)">최종 발표</span><span style="--c:var(--add1)">1차 추가합격</span><span style="--c:var(--add2)">2차+ 추가</span>
+      </div>
+    </div>
+    <div id="sch-table" class="view on">
+      <div class="card scroll"><table class="grid">
+        <thead><tr><th>학교</th><th>1차(서류) 발표</th><th>면접</th><th>최종 발표</th><th>1차 추가합격</th><th>2차 이후 / 비고</th></tr></thead>
+        <tbody id="schBody"></tbody>
+      </table></div>
+    </div>
+    <div id="sch-cal" class="view"><div id="calMonths" class="months"></div></div>
+    <p class="hint" id="schFoot"></p>
+  </section>
+
+  <!-- 바로가기 -->
+  <section id="tab-links" class="tab">
+    <div class="head">
+      <h1>바로가기</h1>
+      <p class="sub">추합 정보 제보는 시트에 직접 입력하거나 카페 제보 게시글에 댓글로 남기면 된다.</p>
+    </div>
+    <div class="links" id="linkList"></div>
+  </section>
+</main>
+
+<footer class="wrap foot">
+  자료: 수험생 집단지성 제보(메가로스쿨 박도현 변호사 관리 시트), 각 학교 입학요강. 사실과 다른 내용이 있을 수 있으며 해석은 각자의 몫이다.
+</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<script src="js/config.js"></script>
+<script src="js/parser.js"></script>
+<script src="js/schedule-data.js"></script>
+<script src="js/app.js"></script>
+</body>
+</html>
