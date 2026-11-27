@@ -349,6 +349,26 @@
 
   $('#banners').innerHTML = (C.banners || []).map(b => `<a class="banner" href="${esc(b.url)}" target="_blank" rel="noopener"><img src="${esc(b.img)}" srcset="${esc(b.img)} 1x, ${esc(b.img2x || b.img)} 2x" alt="${esc(b.alt)}" width="870" height="180"></a>`).join('');
 
+  // ---------------- 카운트다운 ----------------
+  (function countdown() {
+    const cd = C.countdown, box = $('#countdown'); if (!cd || !box) return;
+    const at = new Date(cd.at).getTime(), endOfDay = new Date(cd.at.slice(0, 10) + 'T23:59:59+09:00').getTime();
+    const p2 = n => String(n).padStart(2, '0');
+    const unit = (v, l) => `<div class="cd-u"><b>${p2(v)}</b><span>${l}</span></div>`;
+    let t;
+    function tick() {
+      const now = Date.now(), left = at - now;
+      if (left <= 0) {
+        if (now > endOfDay || !cd.afterText) { box.hidden = true; clearInterval(t); return; }
+        box.innerHTML = `<div class="cd-after">${esc(cd.afterText)}</div>`; box.hidden = false; return;
+      }
+      const s = Math.floor(left / 1000), d = Math.floor(s / 86400), h = Math.floor(s % 86400 / 3600), m = Math.floor(s % 3600 / 60);
+      box.innerHTML = `<div class="cd-txt"><b>${esc(cd.label)}</b><small>${esc(cd.note || '')}</small></div><div class="cd-units">${d ? unit(d, '일') : ''}${unit(h, '시간')}${unit(m, '분')}${unit(s % 60, '초')}</div>`;
+      box.hidden = false;
+    }
+    t = setInterval(tick, 1000); tick();
+  })();
+
   if (C.report) { $('#btnSheet').href = C.report.sheet; $('#btnCafe').href = C.report.cafe; }
 
   // ---------------- 카페 공지 ----------------

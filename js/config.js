@@ -31,6 +31,9 @@ window.SITE_CONFIG = {
   // 예: groupsByYear: { 2021: { '강원대학교': 'A' } }
   groupsByYear: {},
 
+  // 모든 페이지 맨 위 카운트다운. at(한국시간)이 지나면 afterText를 그날 끝까지 보여주고 사라진다. 빼려면 null.
+  countdown: { label: '나군 면접까지', note: '11.28(토) 09:00 기준', at: '2026-11-28T09:00:00+09:00', afterText: '나군 면접 응시생 모두 화이팅!' },
+
   // 모든 페이지 머리글 아래에 보이는 배너(여러 개면 차례로 표시). 빼려면 목록에서 지운다.
   banners: [
     { img: 'img/banner-interview-870.png', img2x: 'img/banner-interview-1740.png', url: 'https://forms.cloud.microsoft/r/9hYfptwVrL', alt: '가·나군 면접 응시생 리워드 증정 — 면접 문제 제보하기' }

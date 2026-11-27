@@ -157,3 +157,16 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .nb-list .d{color:var(--ink-dim);font-size:13px;flex:none;font-variant-numeric:tabular-nums}
 .nb-list .pin{flex:none;font-size:11.5px;font-weight:800;color:#fff;background:var(--accent);border-radius:5px;padding:1px 6px}
 .pill{white-space:nowrap}
+
+/* 카운트다운 */
+.cd{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px 20px;margin:16px 0 12px;padding:18px 22px;border-radius:16px;color:#f3efe4;background:#1d1b18 repeating-linear-gradient(135deg,rgba(255,255,255,.035) 0 14px,transparent 14px 28px)}
+.cd[hidden]{display:none}
+.cd-txt{display:flex;flex-direction:column;gap:2px}
+.cd-txt b{font-size:22px;font-weight:900;color:#e9e4d8;letter-spacing:-.01em}
+.cd-txt small{font-size:14px;color:#a8a191}
+.cd-units{display:flex;gap:10px}
+.cd-u{width:84px;padding:10px 0 8px;border-radius:14px;background:#ffd43b;color:#141414;display:flex;flex-direction:column;align-items:center;line-height:1}
+.cd-u b{font-size:40px;font-weight:900;font-variant-numeric:tabular-nums;letter-spacing:-.02em}
+.cd-u span{font-size:14px;font-weight:800;margin-top:6px}
+.cd-after{font-size:22px;font-weight:900;color:#ffd43b;width:100%;text-align:center}
+@media (max-width:560px){.cd{padding:14px 16px}.cd-txt b{font-size:19px}.cd-units{gap:7px;width:100%}.cd-u{flex:1;width:auto}.cd-u b{font-size:32px}}
