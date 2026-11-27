@@ -26,6 +26,11 @@ window.SITE_CONFIG = {
   // 예: groupsByYear: { 2021: { '강원대학교': 'A' } }
   groupsByYear: {},
 
+  // 모든 페이지 머리글 아래에 보이는 배너(여러 개면 차례로 표시). 빼려면 목록에서 지운다.
+  banners: [
+    { img: 'img/banner-interview-870.png', img2x: 'img/banner-interview-1740.png', url: 'https://forms.cloud.microsoft/r/9hYfptwVrL', alt: '가·나군 면접 응시생 리워드 증정 — 면접 문제 제보하기' }
+  ],
+
   // 추합현황 페이지 상단의 큰 제보 버튼
   report: {
     sheet: 'https://docs.google.com/spreadsheets/d/11J1_WlzSdtp3BQuFiI9oVglM4RNSxuKrApN3nDaWVXs/edit#gid=803920049',

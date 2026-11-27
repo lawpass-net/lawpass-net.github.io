@@ -310,6 +310,8 @@
   $('#linkList').innerHTML = C.links.map(l => `<a class="${l.url ? '' : 'off'}" href="${esc(l.url || '#')}" target="_blank" rel="noopener">
     <span class="k">${esc(l.tag)}</span><div class="t">${esc(l.title)}</div><div class="d">${esc(l.desc)}${l.url ? '' : ' (준비 중)'}</div></a>`).join('');
 
+  $('#banners').innerHTML = (C.banners || []).map(b => `<a class="banner" href="${esc(b.url)}" target="_blank" rel="noopener"><img src="${esc(b.img)}" srcset="${esc(b.img)} 1x, ${esc(b.img2x || b.img)} 2x" alt="${esc(b.alt)}" width="870" height="180"></a>`).join('');
+
   if (C.report) { $('#btnSheet').href = C.report.sheet; $('#btnCafe').href = C.report.cafe; }
 
   // ---------------- 시작 ----------------
