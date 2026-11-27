@@ -81,20 +81,20 @@
       <p class="sub" id="schSub"></p>
     </div>
     <div class="bar">
-      <div class="seg" id="schSeg"><button data-v="table" class="on">표</button><button data-v="cal">달력</button></div>
+      <div class="seg" id="schSeg"><button data-v="cal" class="on">달력</button><button data-v="table">표</button></div>
       <input id="schQ" class="search" placeholder="학교 검색">
       <div class="legend">
         <span style="--c:var(--doc)">1차 발표</span><span style="--c:var(--intA)">가군 면접</span><span style="--c:var(--intB)">나군 면접</span>
         <span style="--c:var(--final)">최종 발표</span><span style="--c:var(--add1)">1차 추가합격</span><span style="--c:var(--add2)">2차+ 추가</span>
       </div>
     </div>
-    <div id="sch-table" class="view on">
+    <div id="sch-table" class="view">
       <div class="card scroll"><table class="grid">
         <thead><tr><th>학교</th><th>1차(서류) 발표</th><th>면접</th><th>최종 발표</th><th>1차 추가합격</th><th>2차 이후 / 비고</th></tr></thead>
         <tbody id="schBody"></tbody>
       </table></div>
     </div>
-    <div id="sch-cal" class="view"><div id="calMonths" class="months"></div></div>
+    <div id="sch-cal" class="view on"><div id="calMonths" class="months"></div></div>
     <p class="hint" id="schFoot"></p>
   </section>
 
