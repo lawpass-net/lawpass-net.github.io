@@ -101,9 +101,10 @@
       const name = norm(rows[i][schoolCol]);
       if (!name) { if (schools.length) break; else continue; }
       if (!/대학교$/.test(name)) break;
-      const rec = { year, school: name, short: name.replace(/대학교$/, '대').replace('한국외국어대', '외대').replace('이화여자대', '이화여대').replace('서울시립대', '시립대'), note: noteCol >= 0 ? norm(rows[i][noteCol]) : '', total: {}, weeks: {} };
+      const rec = { year, school: name, short: name.replace(/대학교$/, '대').replace('한국외국어대', '외대').replace('이화여자대', '이화여대').replace('서울시립대', '시립대'), note: noteCol >= 0 ? norm(rows[i][noteCol]) : '', notePos: i + ',' + noteCol, total: {}, weeks: {} };
       cols.forEach(c => {
         const v = parseValue(rows[i][c.idx]);
+        v.pos = i + ',' + c.idx;
         if (c.key === 'total') rec.total[c.group] = v;
         else (rec.weeks[c.key] = rec.weeks[c.key] || {})[c.group] = v;
       });

@@ -66,11 +66,25 @@
     return d;
   }
 
+  let VERIFIED = {};
+  // 정보공개청구로 확인한 값(시트의 빨간 글자) 표시
+  function applyVerified(d) {
+    const v = VERIFIED[d.year] || {};
+    d.schools.forEach(s => (v[s.school] || []).forEach(k => {
+      if (k === 'note') { s.noteVerified = true; return; }
+      const [key, g] = k.split('|');
+      const cellv = key === 'total' ? s.total[g] : (s.weeks[key] || {})[g];
+      if (cellv) cellv.verified = true;
+    }));
+    return d;
+  }
+
   async function loadAll() {
+    try { VERIFIED = await (await fetch('data/verified.json', { cache: 'no-cache' })).json(); } catch (e) { VERIFIED = {}; }
     const res = await Promise.all(C.years.map(async y => {
       try {
         const { text, live } = await loadYear(y);
-        DATA[y.year] = applyGroups(P.parseYearSheet(P.parseCSV(text), y.year));
+        DATA[y.year] = applyGroups(applyVerified(P.parseYearSheet(P.parseCSV(text), y.year)));
         return live;
       } catch (e) { console.error(y.year, e); return null; }
     }));
@@ -109,7 +123,8 @@
 
   // ---------------- 렌더 ----------------
   const pill = g => `<span class="pill ${g === '가군' ? 'ga' : 'na'}">${g === '가군' ? '가' : '나'}</span>`;
-  const cell = v => v && v.raw ? esc(v.raw) : '<span class="empty">·</span>';
+  const cell = v => v && v.raw ? (v.verified ? `<span class="vf" title="정보공개청구로 확인한 값">${esc(v.raw)}</span>` : esc(v.raw)) : '<span class="empty">·</span>';
+  const noteHtml = s => s.noteVerified ? `<span class="vf">${esc(s.note)}</span>` : esc(s.note);
 
   function render() {
     document.querySelectorAll('#tab-chuhap .view').forEach(v => v.classList.toggle('on', v.id === 'view-' + state.view));
@@ -128,7 +143,7 @@
       if (!gs.length) { if (state.group !== 'all') return; gs = []; }
       const span = Math.max(gs.length, 1);
       const first = `<td class="sch" rowspan="${span}"><a data-s="${esc(s.school)}">${esc(s.short)}</a></td>`;
-      const note = `<td class="note" rowspan="${span}">${esc(s.note)}</td>`;
+      const note = `<td class="note" rowspan="${span}">${noteHtml(s)}</td>`;
       if (!gs.length) {
         h += `<tr class="split">${first}<td class="num empty" colspan="${d.weeks.length + 1}">제보 없음</td>${note}</tr>`; rows++; return;
       }
@@ -150,8 +165,8 @@
       if (!s) return;
       const gs = s.groups.length ? s.groups : [null];
       gs.forEach((g, i) => {
-        const weeks = g ? d.weeks.map(w => { const v = s.weeks[w.key] && s.weeks[w.key][g]; return v && v.raw ? `${w.after ? '이후' : w.week + '주'} ${esc(v.raw)}` : ''; }).filter(Boolean).join(' · ') : '';
-        h += `<tr class="${i === 0 ? 'split' : ''}">${i === 0 ? `<td class="sch" rowspan="${gs.length}">${y.year}</td>` : ''}<td>${g ? pill(g) : '-'}</td><td class="num tot">${g ? cell(s.total[g]) : '<span class="empty">제보 없음</span>'}</td><td>${weeks || '<span class="empty">·</span>'}</td>${i === 0 ? `<td class="note" rowspan="${gs.length}">${esc(s.note)}</td>` : ''}</tr>`;
+        const weeks = g ? d.weeks.map(w => { const v = s.weeks[w.key] && s.weeks[w.key][g]; return v && v.raw ? `${w.after ? '이후' : w.week + '주'} ${cell(v)}` : ''; }).filter(Boolean).join(' · ') : '';
+        h += `<tr class="${i === 0 ? 'split' : ''}">${i === 0 ? `<td class="sch" rowspan="${gs.length}">${y.year}</td>` : ''}<td>${g ? pill(g) : '-'}</td><td class="num tot">${g ? cell(s.total[g]) : '<span class="empty">제보 없음</span>'}</td><td>${weeks || '<span class="empty">·</span>'}</td>${i === 0 ? `<td class="note" rowspan="${gs.length}">${noteHtml(s)}</td>` : ''}</tr>`;
       });
     });
     $('#schoolHist').innerHTML = h + '</tbody>';
@@ -194,10 +209,11 @@
         datasets: showGroups().map(g => ({
           label: g, backgroundColor: gColor(g), borderRadius: 4,
           data: years.map(y => { const s = find(y); const v = s && s.total[g]; return v && v.n != null ? v.n : null; }),
-          raws: years.map(y => { const s = find(y); const v = s && s.total[g]; return v ? v.raw : ''; })
+          raws: years.map(y => { const s = find(y); const v = s && s.total[g]; return v ? v.raw : ''; }),
+          vf: years.map(y => { const s = find(y); const v = s && s.total[g]; return !!(v && v.verified); })
         })).filter(ds => ds.data.some(v => v != null))
       },
-      options: baseOpts({ plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw}` } } } })
+      options: baseOpts({ plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw}${c.dataset.vf[c.dataIndex] ? ' · 정보공개청구 확인' : ''}` } } } })
     });
 
     const d = DATA[state.year], s = find(state.year);
