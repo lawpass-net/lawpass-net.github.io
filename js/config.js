@@ -47,6 +47,6 @@ window.SITE_CONFIG = {
     { title: '추합 제보 게시글', desc: '틀린 내용이나 새 소식은 이 게시글 댓글로 알려 달라.', url: 'https://cafe.daum.net/lsinfo/nafx/82', tag: '제보' },
     { title: '입시결과 제보 게시글', desc: 'LEET·학점·영어 등 입시결과(합불) 제보 게시글.', url: 'https://cafe.daum.net/lsinfo/nafW/79', tag: '제보' },
     { title: '다음 카페 로스쿨 입시정보', desc: '입시 정보·후기·질문 게시판.', url: 'https://cafe.daum.net/lsinfo', tag: '카페' },
-    { title: '오픈채팅방', desc: '박도현 변호사 오픈채팅방.', url: '', tag: '오픈카톡' }
+    { title: '"박도현 변호사와 함께 로스쿨로 Go!" 오픈카톡방', desc: '입시 소식 공유, 추합 제보, 질문은 오픈카톡방에서.', url: 'https://open.kakao.com/o/g0JMskL', tag: '오픈카톡' }
   ]
 };
