@@ -11,6 +11,7 @@
     const id = ['chuhap', 'schedule', 'links'].includes(t) ? t : 'chuhap';
     document.querySelectorAll('.tab').forEach(el => el.classList.toggle('on', el.id === 'tab-' + id));
     document.querySelectorAll('#nav a').forEach(a => a.classList.toggle('on', a.dataset.tab === id));
+    $('#chuhapFoot').hidden = id !== 'chuhap';
     if (id === 'chuhap') drawCharts();
   }
   window.addEventListener('hashchange', showTab);
