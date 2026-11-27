@@ -336,7 +336,27 @@
 
   if (C.report) { $('#btnSheet').href = C.report.sheet; $('#btnCafe').href = C.report.cafe; }
 
+  // ---------------- 카페 공지 ----------------
+  async function loadNotices() {
+    let d;
+    try { d = await (await fetch('data/cafe-notice.json', { cache: 'no-cache' })).json(); } catch (e) { return; }
+    const b = (d.boards || [])[0]; if (!b || !b.items || !b.items.length) return;
+    const pinned = b.items.filter(x => x.pinned);
+    const seen = new Set(pinned.map(x => x.id));
+    const recent = b.items.filter(x => !x.pinned && !seen.has(x.id));
+    const yr = String(new Date().getFullYear());
+    const md = s => !s ? '' : s.slice(0, 4) === yr ? s.slice(5).replace('-', '.') : s.slice(2).replace(/-/g, '.');
+    const row = x => `<li><a href="${esc(x.url)}" target="_blank" rel="noopener">${x.pinned ? '<span class="pin">공지</span>' : ''}<span class="t">${esc(x.title)}</span><span class="d">${esc(md(x.date))}</span></a></li>`;
+    $('#noticeTopList').innerHTML = pinned.concat(recent).slice(0, 3).map(row).join('');
+    $('#noticeFullList').innerHTML = pinned.map(row).join('') + recent.slice(0, 12).map(row).join('');
+    $('#noticeMore').href = $('#noticeMore2').href = b.url;
+    const u = new Date(d.updated);
+    $('#noticeUpd').textContent = `카페 공지사항 게시판에서 1시간마다 자동으로 가져온다. 마지막 확인: ${u.getMonth() + 1}월 ${u.getDate()}일 ${String(u.getHours()).padStart(2, '0')}:${String(u.getMinutes()).padStart(2, '0')}`;
+    $('#noticeTop').hidden = $('#noticeFull').hidden = false;
+  }
+
   // ---------------- 시작 ----------------
+  loadNotices();
   renderSchedule();
   showTab();
   loadAll();
