@@ -40,9 +40,16 @@ window.SITE_CONFIG = {
     finals: true
   },
 
-  // 모든 페이지 머리글 아래에 보이는 배너(여러 개면 차례로 표시). 빼려면 목록에서 지운다.
+  // 배너 6종. 매 방문마다 무작위로 둘을 골라 위(정사각)·아래(가로)에 하나씩 보여준다(같은 배너가 겹치지 않음).
+  // 이미지 원본: E:\OneDrive_SH_Post_LEET6\홍보\이미지\배너_정사각_1080_*.png / 배너_가로_2000x400_*.png → img/banners/sq-*.png / wide-*.png
+  // url이 비어 있으면 눌러도 이동하지 않는다. 빼려면 목록에서 지운다.
   banners: [
-    { img: 'img/banner-interview-870.png', img2x: 'img/banner-interview-1740.png', url: 'https://forms.cloud.microsoft/r/9hYfptwVrL', alt: '가·나군 면접 응시생 리워드 증정 — 면접 문제 제보하기' }
+    { key: 'interview',  alt: '면접 문제 제보 — 가·나군 면접 응시생 리워드 증정', url: 'https://forms.cloud.microsoft/r/9hYfptwVrL' },
+    { key: 'result',     alt: '로스쿨 입시 결과 제보 EVENT', url: 'https://cafe.daum.net/lsinfo/nafW/79' },
+    { key: 'leet',       alt: '박도현 변호사의 LEET 그룹과외', url: 'https://cafe.daum.net/lsinfo/nafW/80' },
+    { key: 'civil',      alt: '박도현 변호사의 민법 사례형 클리닉(온라인)', url: '' },
+    { key: 'mentoring',  alt: '로스쿨 생활 멘토링 특강', url: '' },
+    { key: 'supporters', alt: '재학생 서포터스 모집', url: '' }
   ],
 
   // 추합현황 페이지 상단의 큰 제보 버튼

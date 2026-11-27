@@ -348,7 +348,34 @@
   $('#linkList').innerHTML = C.links.map(l => `<a class="${l.url ? '' : 'off'}" href="${esc(l.url || '#')}" target="_blank" rel="noopener">
     <span class="k">${esc(l.tag)}</span><div class="t">${esc(l.title)}</div><div class="d">${esc(l.desc)}${l.url ? '' : ' (준비 중)'}</div></a>`).join('');
 
-  $('#banners').innerHTML = (C.banners || []).map(b => `<a class="banner" href="${esc(b.url)}" target="_blank" rel="noopener"><img src="${esc(b.img)}" srcset="${esc(b.img)} 1x, ${esc(b.img2x || b.img)} 2x" alt="${esc(b.alt)}" width="870" height="180"></a>`).join('');
+  // 배너: 서로 다른 두 개를 무작위로 골라 위(정사각)·아래(가로)에 하나씩. 좌우 버튼으로 넘기되 위·아래가 같은 배너가 되지 않게 건너뛴다.
+  (function banners() {
+    const list = C.banners || [], n = list.length; if (!n) return;
+    const slots = [
+      { el: $('#bannerTop'), kind: 'sq', w: 1080, h: 1080 },
+      { el: $('#bannerBottom'), kind: 'wide', w: 2000, h: 400 }
+    ].filter(x => x.el);
+    const first = Math.floor(Math.random() * n);
+    slots.forEach((x, k) => { x.i = n > 1 ? (first + k * (1 + Math.floor(Math.random() * (n - 1)))) % n : 0; });
+    function render(x) {
+      const b = list[x.i];
+      const img = `<img src="img/banners/${x.kind}-${esc(b.key)}.png" alt="${esc(b.alt)}" width="${x.w}" height="${x.h}">`;
+      x.el.querySelector('.bn-link').outerHTML = b.url
+        ? `<a class="bn-link" href="${esc(b.url)}" target="_blank" rel="noopener">${img}</a>`
+        : `<span class="bn-link nolink">${img}</span>`;
+    }
+    function move(x, d) {
+      const other = slots.filter(y => y !== x).map(y => y.i);
+      let i = x.i;
+      do { i = (i + d + n) % n; } while (other.includes(i) && n > other.length + 1);
+      x.i = i; render(x);
+    }
+    slots.forEach(x => {
+      x.el.innerHTML = '<span class="bn-link"></span>' + (n > 2 ? '<button class="bn-nav prev" aria-label="이전 배너">‹</button><button class="bn-nav next" aria-label="다음 배너">›</button>' : '');
+      x.el.querySelectorAll('.bn-nav').forEach(btn => btn.addEventListener('click', () => move(x, btn.classList.contains('prev') ? -1 : 1)));
+      render(x); x.el.hidden = false;
+    });
+  })();
 
   // ---------------- 카운트다운 ----------------
   (function countdown() {
