@@ -135,3 +135,8 @@ table.grid{border-collapse:collapse;width:100%;font-size:15px}
 .banner{display:block;border-radius:12px;overflow:hidden;box-shadow:0 2px 10px rgba(0,0,0,.08);transition:.15s;max-width:870px;margin:0 auto;width:100%}
 .banner:hover{transform:translateY(-1px);box-shadow:0 6px 18px rgba(0,0,0,.14)}
 .banner img{display:block;width:100%;height:auto}
+
+.vlegend{display:flex;flex-direction:column;gap:4px;font-size:14px;margin:10px 2px 0;color:var(--ink);background:var(--surface-2);border-radius:8px;padding:9px 12px}
+.vlegend span{display:flex;align-items:center;gap:6px}
+.vlegend .sw{display:inline-block;width:14px;height:14px;border-radius:3px;flex:none}
+.vlegend .sw.red{background:#d1302a}.vlegend .sw.blk{background:var(--ink)}

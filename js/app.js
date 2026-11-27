@@ -81,7 +81,8 @@
 
   async function loadAll() {
     try { VERIFIED = await (await fetch('data/verified.json', { cache: 'no-cache' })).json(); } catch (e) { VERIFIED = {}; }
-    const res = await Promise.all(C.years.map(async y => {
+    const ALL = C.years.concat(C.historyYears || []);
+    const res = await Promise.all(ALL.map(async y => {
       try {
         const { text, live } = await loadYear(y);
         DATA[y.year] = applyGroups(applyVerified(P.parseYearSheet(P.parseCSV(text), y.year)));
@@ -91,8 +92,8 @@
     const liveCnt = res.filter(x => x === true).length;
     const cur = DATA[C.years[0].year];
     const st = $('#dataStatus');
-    if (liveCnt === C.years.length) { source = 'live'; st.textContent = `시트 실시간 연결 · ${cur ? cur.year + '학년도 ' + cur.updated : ''}`; }
-    else if (liveCnt > 0) { source = 'mixed'; st.textContent = `일부 연도만 실시간 연결됨(${liveCnt}/${C.years.length}) · 나머지는 저장본`; st.classList.add('warn'); }
+    if (liveCnt === ALL.length) { source = 'live'; st.textContent = `시트 실시간 연결 · ${cur ? cur.year + '학년도 ' + cur.updated : ''}`; }
+    else if (liveCnt > 0) { source = 'mixed'; st.textContent = `일부 연도만 실시간 연결됨(${liveCnt}/${ALL.length}) · 나머지는 저장본`; st.classList.add('warn'); }
     else { source = 'snapshot'; st.textContent = `저장본 표시 중 · ${cur ? cur.year + '학년도 ' + cur.updated : ''}`; }
     buildControls();
     render();
@@ -103,7 +104,7 @@
     $('#yearSeg').innerHTML = C.years.filter(y => DATA[y.year]).map(y =>
       `<button data-y="${y.year}" class="${y.year === state.year ? 'on' : ''}">${y.year}<small>학년도</small></button>`).join('');
     const names = new Set();
-    C.years.forEach(y => DATA[y.year] && DATA[y.year].schools.forEach(s => names.add(s.school)));
+    C.years.concat(C.historyYears || []).forEach(y => DATA[y.year] && DATA[y.year].schools.forEach(s => names.add(s.school)));
     const list = [...names].sort((a, b) => a.localeCompare(b, 'ko'));
     state.school = state.school || list[0];
     $('#schoolSel').innerHTML = list.map(n => `<option ${n === state.school ? 'selected' : ''}>${esc(n)}</option>`).join('');
@@ -159,7 +160,7 @@
 
   function renderSchoolHist() {
     let h = '<thead><tr><th>학년도</th><th>군</th><th>총계</th><th>주차별(제보)</th><th>비고</th></tr></thead><tbody>';
-    C.years.forEach(y => {
+    C.years.concat(C.historyYears || []).sort((a, b) => b.year - a.year).forEach(y => {
       const d = DATA[y.year]; if (!d) return;
       const s = d.schools.find(x => x.school === state.school);
       if (!s) return;
@@ -200,20 +201,40 @@
   }
 
   function drawSchool() {
-    const years = C.years.map(y => y.year).filter(y => DATA[y]).sort();
+    const years = C.years.concat(C.historyYears || []).map(y => y.year).filter(y => DATA[y]).sort();
     const find = y => DATA[y].schools.find(s => s.school === state.school);
+    const RED = '#d1302a', BLK = css('--ink');
+    const tv = (y, g) => { const s = find(y); return s && s.total[g]; };
+    const gs = showGroups().filter(g => years.some(y => { const v = tv(y, g); return v && v.n != null; }));
+    const two = gs.length > 1;
     chart('cYear', {
       type: 'bar',
       data: {
         labels: years.map(y => y + ''),
-        datasets: showGroups().map(g => ({
-          label: g, backgroundColor: gColor(g), borderRadius: 4,
-          data: years.map(y => { const s = find(y); const v = s && s.total[g]; return v && v.n != null ? v.n : null; }),
-          raws: years.map(y => { const s = find(y); const v = s && s.total[g]; return v ? v.raw : ''; }),
-          vf: years.map(y => { const s = find(y); const v = s && s.total[g]; return !!(v && v.verified); })
-        })).filter(ds => ds.data.some(v => v != null))
+        datasets: gs.map(g => ({
+          label: g, borderRadius: 4,
+          data: years.map(y => { const v = tv(y, g); return v && v.n != null ? v.n : null; }),
+          raws: years.map(y => { const v = tv(y, g); return v ? v.raw : ''; }),
+          vf: years.map(y => { const v = tv(y, g); return !!(v && v.verified); }),
+          backgroundColor: years.map(y => { const v = tv(y, g); const c = v && v.verified ? RED : BLK; return g === '나군' && two ? c + '99' : c; })
+        }))
       },
-      options: baseOpts({ plugins: { legend: { position: 'bottom' }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw}${c.dataset.vf[c.dataIndex] ? ' · 정보공개청구 확인' : ''}` } } } })
+      plugins: [{
+        id: 'labels',
+        afterDatasetsDraw(ch) {
+          const ctx = ch.ctx; ctx.save(); ctx.textAlign = 'center'; ctx.textBaseline = 'bottom';
+          ch.data.datasets.forEach((ds, di) => ch.getDatasetMeta(di).data.forEach((bar, i) => {
+            if (ds.data[i] == null) return;
+            ctx.fillStyle = ds.vf[i] ? RED : BLK; ctx.font = "700 12px 'Pretendard Variable',sans-serif";
+            ctx.fillText((two ? (ds.label === '가군' ? '가 ' : '나 ') : '') + ds.data[i] + (/\+/.test(ds.raws[i]) ? '+' : ''), bar.x, bar.y - 3);
+          }));
+          ctx.restore();
+        }
+      }],
+      options: baseOpts({
+        layout: { padding: { top: 18 } },
+        plugins: { legend: { display: false }, tooltip: { callbacks: { label: c => `${c.dataset.label}: ${c.dataset.raws[c.dataIndex] || c.raw} · ${c.dataset.vf[c.dataIndex] ? '정보공개청구 확인' : '수험생 제보(미확인)'}` } } }
+      })
     });
 
     const d = DATA[state.year], s = find(state.year);
