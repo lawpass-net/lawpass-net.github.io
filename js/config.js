@@ -59,7 +59,7 @@ window.SITE_CONFIG = {
   // cloudflareToken: Cloudflare 스크립트 한 줄의 data-cf-beacon 안 "token" 값 / ga4Id: GA4 측정 ID(G-…) / naverId: 네이버 애널리틱스 사이트 ID(wcs_add["wa"] 값)
   analytics: {
     cloudflareToken: '2427970e37d34c78a652f28ad08a4bf9',
-    ga4Id: '',
+    ga4Id: 'G-KMSDK8KMQP',
     naverId: ''
   },
 
