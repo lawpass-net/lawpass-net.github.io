@@ -49,7 +49,8 @@ window.SITE_CONFIG = {
     { key: 'leet',       alt: '박도현 변호사의 LEET 추리논증·논술 과외', url: 'https://cafe.daum.net/lsinfo/nafW/80' },
     { key: 'civil',      alt: '박도현 변호사의 민법 사례형 클리닉(온라인)', url: 'https://cafe.daum.net/lsinfo/nafW/81' },
     { key: 'mentoring',  alt: '로스쿨 생활 멘토링 특강', url: '' },
-    { key: 'supporters', alt: '재학생 서포터스 모집', url: '' }
+    { key: 'supporters', alt: '재학생 서포터스 모집', url: '' },
+    { key: 'barn',       alt: '외양간 고치기 프로젝트', url: '' }  // 2026학년도 글은 nafW/75. 2027학년도 글 확인 후 넣는다
   ],
 
   // 방문 통계(js/analytics.js가 읽는다). 값이 비어 있는 도구는 불러오지 않는다. lawpass.net에서만 켜진다.
