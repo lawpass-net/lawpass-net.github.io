@@ -58,7 +58,7 @@ window.SITE_CONFIG = {
   // 방문 통계(js/analytics.js가 읽는다). 값이 비어 있는 도구는 불러오지 않는다. lawpass.net에서만 켜진다.
   // cloudflareToken: Cloudflare 스크립트 한 줄의 data-cf-beacon 안 "token" 값 / ga4Id: GA4 측정 ID(G-…) / naverId: 네이버 애널리틱스 사이트 ID(wcs_add["wa"] 값)
   analytics: {
-    cloudflareToken: '',
+    cloudflareToken: '2427970e37d34c78a652f28ad08a4bf9',
     ga4Id: '',
     naverId: ''
   },
