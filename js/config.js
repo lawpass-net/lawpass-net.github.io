@@ -60,7 +60,7 @@ window.SITE_CONFIG = {
   analytics: {
     cloudflareToken: '2427970e37d34c78a652f28ad08a4bf9',
     ga4Id: 'G-KMSDK8KMQP',
-    naverId: ''
+    naverId: '88bb66b10375d0'
   },
 
   // 추합현황 페이지 상단의 큰 제보 버튼

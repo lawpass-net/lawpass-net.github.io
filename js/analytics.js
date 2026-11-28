@@ -40,7 +40,7 @@
 
   // 네이버 애널리틱스(네이버 검색 유입)
   if (A.naverId) {
-    load('https://wcs.naver.net/wcslog.js', null, function () {
+    load('https://wcs.pstatic.net/wcslog.js', null, function () {
       window.wcs_add = window.wcs_add || {};
       window.wcs_add.wa = A.naverId;
       if (window.wcs) window.wcs_do();
