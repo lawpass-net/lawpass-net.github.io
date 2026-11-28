@@ -350,7 +350,7 @@
   $('#linkList').innerHTML = C.links.map(l => `<a class="${l.url ? '' : 'off'}" href="${esc(l.url || '#')}" target="_blank" rel="noopener">
     <span class="k">${esc(l.tag)}</span><div class="t">${esc(l.title)}</div><div class="d">${esc(l.desc)}${l.url ? '' : ' (준비 중)'}</div></a>`).join('');
 
-  // 배너: 서로 다른 두 개를 무작위로 골라 위(정사각)·아래(가로)에 하나씩. 좌우 버튼으로 넘기되 위·아래가 같은 배너가 되지 않게 건너뛴다.
+  // 배너: 서로 다른 두 개를 무작위로 골라 위(정사각)·아래(가로)에 하나씩. 좌우 버튼·점으로 넘기되 다른 칸의 배너를 고르면 두 칸을 맞바꿔 겹치지 않게 한다.
   (function banners() {
     const list = C.banners || [], n = list.length; if (!n) return;
     const slots = [
@@ -366,18 +366,21 @@
         ? `<a class="bn-link" href="${esc(b.url)}" target="_blank" rel="noopener">${img}</a>`
         : `<span class="bn-link nolink">${img}</span>`;
       const other = slots.filter(y => y !== x).map(y => y.i);
-      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => { d.classList.toggle('on', k === x.i); d.disabled = other.includes(k); });
+      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => { d.classList.toggle('on', k === x.i); d.classList.toggle('other', other.includes(k)); });
+    }
+    // 고른 배너가 다른 칸에 떠 있으면 두 칸을 맞바꾼다(7종 모두 어느 칸에서나 볼 수 있고, 위·아래는 겹치지 않는다)
+    function go(x, i) {
+      slots.forEach(y => { if (y !== x && y.i === i) y.i = x.i; });
+      x.i = i; slots.forEach(render);
     }
     function move(x, d) {
-      const other = slots.filter(y => y !== x).map(y => y.i);
-      let i = x.i;
-      do { i = (i + d + n) % n; } while (other.includes(i) && n > other.length + 1);
-      x.i = i; slots.forEach(render);
+      const i = (x.i + d + n) % n;
+      go(x, i);
       track('banner_nav', { position: x.pos, method: d < 0 ? 'prev' : 'next', banner_key: list[i].key });
     }
     slots.forEach(x => {
       x.el.innerHTML = '<span class="bn-link"></span>' + (n > 2 ? `<div class="bn-ctl"><button class="bn-nav prev" aria-label="이전 배너">‹</button><div class="bn-dots">${list.map((b, k) => `<button aria-label="${k + 1}번 배너"></button>`).join('')}</div><button class="bn-nav next" aria-label="다음 배너">›</button></div>` : '');
-      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => d.addEventListener('click', () => { x.i = k; slots.forEach(render); track('banner_nav', { position: x.pos, method: 'dot', banner_key: list[k].key }); }));
+      x.el.querySelectorAll('.bn-dots button').forEach((d, k) => d.addEventListener('click', () => { go(x, k); track('banner_nav', { position: x.pos, method: 'dot', banner_key: list[k].key }); }));
       x.el.addEventListener('click', e => { if (e.target.closest('.bn-link')) track('banner_click', { position: x.pos, banner_key: list[x.i].key, linked: !!list[x.i].url }); });
       x.el.querySelectorAll('.bn-nav').forEach(btn => btn.addEventListener('click', () => move(x, btn.classList.contains('prev') ? -1 : 1)));
       render(x); x.el.hidden = false;
