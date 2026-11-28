@@ -361,7 +361,7 @@
     slots.forEach((x, k) => { x.i = n > 1 ? (first + k * (1 + Math.floor(Math.random() * (n - 1)))) % n : 0; });
     function render(x) {
       const b = list[x.i];
-      const img = `<img src="img/banners/${x.kind}-${esc(b.key)}.png" alt="${esc(b.alt)}" width="${x.w}" height="${x.h}">`;
+      const img = `<img src="img/banners/${x.kind}-${esc(b.key)}.png?v=${esc(C.bannerVersion || "")}" alt="${esc(b.alt)}" width="${x.w}" height="${x.h}">`;
       x.el.querySelector('.bn-link').outerHTML = b.url
         ? `<a class="bn-link" href="${esc(b.url)}" target="_blank" rel="noopener">${img}</a>`
         : `<span class="bn-link nolink">${img}</span>`;
