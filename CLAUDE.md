@@ -103,9 +103,11 @@ CNAME                   lawpass.net
 - 도구 3개: **Cloudflare Web Analytics**(쿠키 없음, 방문 수의 기준), **GA4**(클릭·탭 이동 등 행동 분석), **네이버 애널리틱스**(네이버 검색 유입). 도구끼리 숫자가 다른 것은 정상이며 Cloudflare를 기준으로 본다. 쿠키 동의 창은 띄우지 않고 맨 아래 고지 한 줄(`#statNotice`, 값이 하나라도 있을 때만 보임)만 둔다.
 - 값은 `js/config.js`의 `analytics: { cloudflareToken, ga4Id, naverId }` 한 곳에만 적는다. `js/analytics.js`가 값이 있는 도구만 비동기로 불러오며, **lawpass.net에서만 켜진다**(로컬 점검은 `?stats=1`, GA4 디버그 뷰는 `?gadebug=1`).
 - GA4 이벤트(`window.track`, app.js에서 호출): `tab_change`(tab), `year_select`(year), `group_select`(group), `view_select`(view), `report_click`(button: sheet/cafe), `banner_click`(position: top/bottom, banner_key, linked), `banner_nav`(position, method: prev/next/dot, banner_key). GA4에서 맞춤 측정기준으로 보려면 관리 → 맞춤 정의에 position·banner_key·button·tab·view 등을 이벤트 범위로 등록한다.
+- 계정: Cloudflare(dash.cloudflare.com, Web Analytics), GA4(계정 Lawpass / 속성 lawpass.net / 웹 스트림 Lawpass.net), 네이버 애널리틱스(사이트 Lawpass.net, 스크립트 주소 wcs.pstatic.net). 2026.11.28 세 도구 모두 실사이트 수집과 GA4 이벤트를 사용자가 각 화면에서 확인했다.
 - 로컬에서 가짜 토큰으로 띄우면 Cloudflare 수집 요청이 CORS 오류를 내는데, 실제 사이트에서는 나지 않는다.
 
 ## 6. 남은 일·아이디어
+- 네이버 서치어드바이저(searchadvisor.naver.com) 사이트 소유 확인·사이트맵 제출(네이버 검색 노출용, 애널리틱스와 별개).
 - 시트 웹 게시 후 `publishedId` 설정(실시간 반영) — 사용자 작업 필요.
 - 2022 부산대 군 확인.
 - 다른 카페 게시판(nafx 칼럼 등) 목록 추가는 `scripts/fetch-cafe.mjs`의 BOARDS에 추가하면 된다.
